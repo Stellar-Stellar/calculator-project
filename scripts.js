@@ -1,19 +1,51 @@
-let var1 = ""
+let var1 = null
 let operator = ""
-let var2 = ""
+let var2 = null
 let result
 let counter = 0
+let operation = []
 
 const operator_btns = document.querySelectorAll('.op-btn')
 
 const display_num = document.querySelector('.display-num')
 
+const operation_display = document.querySelector('.operation-display')
+
 const number_btns = document.querySelectorAll('.num-btn')
 
-number_btns.forEach((button) => {
+
+if (counter = 0){
+    firstVar()
+} else {
+    secondVar()
+    counter = 0
+}
+
+function firstVar() {
+    number_btns.forEach((button) => {
+        button.addEventListener('click', () => {
+            display_num.textContent += button.id
+            var1 = display_num.textContent
+        })
+    })
+}
+
+function secondVar() {
+    number_btns.forEach((button) => {
+        button.addEventListener('click', () => {
+            display_num.textContent += button.id
+            var2 = display_num.textContent
+        })
+    })
+}
+
+operator_btns.forEach((button) => {
     button.addEventListener('click', () => {
-        display_num.textContent += button.id
-        alert(button.id);
+        operator = button.id
+        counter += 1;
+        alert(display_num.textContent)
+        alert(var1)
+        alert(var2)
     })
 })
 
@@ -44,9 +76,3 @@ const multiply = function (a, b) {
 const divide = function (a, b) {
     return a/b
 }
-
-console.log(add(5, 5))
-console.log(subtract(10, 9))
-console.log(multiply(2, 6))
-console.log(divide(5, 10))
-console.log(var1_display)
