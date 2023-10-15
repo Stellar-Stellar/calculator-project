@@ -1,5 +1,8 @@
+//Current issues:
+//-display div doesn't take up space until a button is clicked. can be fixed in css
+//-more than one calculation cannot be done properly if the result of the first calculation is being used in the display
 let var1 = null
-let operator = ""
+let operator = null
 let var2 = null
 let curVar = 0
 let result = null
@@ -26,56 +29,63 @@ function getVar() {
         button.addEventListener('click', () => {
                 display_num.textContent += button.id
                 curVar = parseInt(display_num.textContent)
-                alert('current var is ' + curVar)
+                console.log('current variable is ' + curVar)
         })
     })
 }
-//adds current variable and chosen operator to array list. if list exceeds 3 items, it will run operate to get a result
-//ITS JUST ADDING NO MATTER THE OPERATOR WHAT????????????
+//adds current variable and chosen operator to array list. if list exceeds 3 items, it will check to see what the operator is and run the numbers through the
+//appropriate operation function
 operator_btns.forEach((button) => {
     button.addEventListener('click', () => {
         operation.push(curVar)
         operation.push(button.id)
         display_num.textContent = ""
-        alert(operation)
+        console.log('the numbers are' + operation)
+        operator = button.id
         counter += 1
-        if (counter > 1) {
-            operate(parseInt(operation[0]), operation[1], parseInt(operation[2])) //tag
+        if (counter > 1 && operation[1] == "+") {
+            add(parseInt(operation[0]), parseInt(operation[2])) //tag
+            operation.splice(0, 3, result)
+            console.log(result)
+            display_num.textContent = result
+        } else if (counter > 1 && operation[1] == "-") {
+            subtract(parseInt(operation[0]), parseInt(operation[2])) //tag
+            operation.splice(0, 3, result)
+            console.log(result)
+            display_num.textContent = result
+        } else if (counter > 1 && operation[1] == "x") {
+            multiply(parseInt(operation[0]), parseInt(operation[2])) //tag
             console.log('the numbers are' + operation)
             operation.splice(0, 3, result)
-            alert("The operation now looks like " + operation)
             console.log(result)
+            display_num.textContent = result
+        } else if (counter > 1 && operation[1] == "/") {
+            divide(parseInt(operation[0]), parseInt(operation[2])) //tag
+            console.log('the numbers are' + operation)
+            operation.splice(0, 3, result)
+            console.log(result)
+            display_num.textContent = result
         }
     })
 })
 
-const operate = function (num1, op, num2){
-    console.log("the operator is " + op) //IT ACTUALLY READS THE OP PROPERLY BUT STILL DEFAULTS TO ADDITOON????????????????????????
-    if (op = "+") { //THIS CONDITIONAL IS TAKEN AS THE DEFAULT NO MATTER WHAT THE OP VALUE ACTUALLY IS FUCKKKK
-        result = add(num1, num2)
-    } else if (op = "-") {
-        result = subtract(num1, num2)
-    } else if (op = "x") {
-        result = multiply(num1, num2)
-    } else if (op = "/") {
-        result = divide(num1, num2)
-    } else if (op = "=") {
-        display_num.textContent = result
-    }
-}
-
+//try making these into the ones used for operation and call the operator since btn click
 const add = function (a, b) {
-    return a + b
+    result = a + b
+    return result
 }
 
 const subtract = function (a, b) {
-    return a - b
+    result = a - b
+    return result
 }
 
 const multiply = function (a, b) {
-    return a * b
+    result = a * b
+    return result
 }
 
 const divide = function (a, b) {
-    return a/b
+    result = a/b
+    return result
 }
