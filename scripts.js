@@ -1,6 +1,7 @@
 //Current issues:
 //-display div doesn't take up space until a button is clicked. can be fixed in css
-//-more than one calculation cannot be done properly if the result of the first calculation is being used in the display
+//-more than one calculation cannot be done properly if the result of the first calculation is being used in the display.
+//this may be fixable by using the internal result instead of the display number
 let var1 = null
 let operator = null
 let var2 = null
@@ -37,39 +38,58 @@ function getVar() {
 //appropriate operation function
 operator_btns.forEach((button) => {
     button.addEventListener('click', () => {
+        operator = button.id
         operation.push(curVar)
         operation.push(button.id)
         display_num.textContent = ""
         console.log('the numbers are' + operation)
-        operator = button.id
         counter += 1
         if (counter > 1 && operation[1] == "+") {
             add(parseInt(operation[0]), parseInt(operation[2])) //tag
             operation.splice(0, 3, result)
             console.log(result)
-            display_num.textContent = result
         } else if (counter > 1 && operation[1] == "-") {
             subtract(parseInt(operation[0]), parseInt(operation[2])) //tag
             operation.splice(0, 3, result)
             console.log(result)
-            display_num.textContent = result
         } else if (counter > 1 && operation[1] == "x") {
             multiply(parseInt(operation[0]), parseInt(operation[2])) //tag
             console.log('the numbers are' + operation)
             operation.splice(0, 3, result)
             console.log(result)
-            display_num.textContent = result
         } else if (counter > 1 && operation[1] == "/") {
             divide(parseInt(operation[0]), parseInt(operation[2])) //tag
             console.log('the numbers are' + operation)
             operation.splice(0, 3, result)
             console.log(result)
+        }
+
+        if (operator == "=") {
+            if (counter > 1 && operation[1] == "+") {
+                add(parseInt(operation[0]), parseInt(operation[2])) //tag
+                operation.splice(0, 3, result)
+                console.log(result)
+            } else if (counter > 1 && operation[1] == "-") {
+                subtract(parseInt(operation[0]), parseInt(operation[2])) //tag
+                operation.splice(0, 3, result)
+                console.log(result)
+            } else if (counter > 1 && operation[1] == "x") {
+                multiply(parseInt(operation[0]), parseInt(operation[2])) //tag
+                console.log('the numbers are' + operation)
+                operation.splice(0, 3, result)
+                console.log(result)
+            } else if (counter > 1 && operation[1] == "/") {
+                divide(parseInt(operation[0]), parseInt(operation[2])) //tag
+                console.log('the numbers are' + operation)
+                operation.splice(0, 3, result)
+                console.log(result)
+            }
+            operation = []
             display_num.textContent = result
         }
     })
 })
 
-//try making these into the ones used for operation and call the operator since btn click
 const add = function (a, b) {
     result = a + b
     return result
