@@ -1,111 +1,102 @@
 //Current issues:
-//-display div doesn't take up space until a button is clicked. can be fixed in css
-//-more than one calculation cannot be done properly if the result of the first calculation is being used in the display.
-//this may be fixable by using the internal result instead of the display number
-let var1 = null
-let operator = null
-let var2 = null
-let curVar = 0
-let result = null
+//-display div doesn't take up space until a button is clicked. can be fixed in CSS
+//IDEA: Have the last used operator button be highlighted/darkened in CSS for user clarity
+//ISSUE: Equals button does not display error properly
+let operator
+let result
+let displayValue
+let internalValue = ""
+let operation_arr = []
 let counter = 0
-let operation = []
 
-const operator_btns = document.querySelectorAll('.op-btn')
+const number_btns = document.querySelectorAll(".num-btn")
 
-const display_num = document.querySelector('.display-num')
+const operator_btns = document.querySelectorAll(".op-btn")
 
-const operation_display = document.querySelector('.operation-display')
+const equals_btn = document.querySelector(".eq-btn")
 
-const number_btns = document.querySelectorAll('.num-btn')
+const clear_btn = document.querySelector(".clear-btn")
 
-//firstVar has to exist to start and it cannot be in a conditional. button events also cant be on conditionals bruh.
-//if either firstVar or secondVar are called during the operator selection, it will run both the initial call and the call during operation,
-//causing one of the vars to double up. I feel like moving variables has to happen in the operator selection so you can input whatever you want for the first var.
+const display_screen = document.querySelector("#display-screen")
 
-//gets one universal variable everytime a number button is clicked
-getVar()
+//updates the display with the appropriate number every time a number button is clicked
+number_btns.forEach((button) => {
 
-function getVar() {
-    number_btns.forEach((button) => {
-        button.addEventListener('click', () => {
-                display_num.textContent += button.id
-                curVar = parseInt(display_num.textContent)
-                console.log('current variable is ' + curVar)
-        })
-    })
-}
-//adds current variable and chosen operator to array list. if list exceeds 3 items, it will check to see what the operator is and run the numbers through the
-//appropriate operation function
-operator_btns.forEach((button) => {
     button.addEventListener('click', () => {
-        operator = button.id
-        operation.push(curVar)
-        operation.push(button.id)
-        display_num.textContent = ""
-        console.log('the numbers are' + operation)
-        counter += 1
-        if (counter > 1 && operation[1] == "+") {
-            add(parseInt(operation[0]), parseInt(operation[2])) //tag
-            operation.splice(0, 3, result)
-            console.log(result)
-        } else if (counter > 1 && operation[1] == "-") {
-            subtract(parseInt(operation[0]), parseInt(operation[2])) //tag
-            operation.splice(0, 3, result)
-            console.log(result)
-        } else if (counter > 1 && operation[1] == "x") {
-            multiply(parseInt(operation[0]), parseInt(operation[2])) //tag
-            console.log('the numbers are' + operation)
-            operation.splice(0, 3, result)
-            console.log(result)
-        } else if (counter > 1 && operation[1] == "/") {
-            divide(parseInt(operation[0]), parseInt(operation[2])) //tag
-            console.log('the numbers are' + operation)
-            operation.splice(0, 3, result)
-            console.log(result)
-        }
-
-        if (operator == "=") {
-            if (counter > 1 && operation[1] == "+") {
-                add(parseInt(operation[0]), parseInt(operation[2])) //tag
-                operation.splice(0, 3, result)
-                console.log(result)
-            } else if (counter > 1 && operation[1] == "-") {
-                subtract(parseInt(operation[0]), parseInt(operation[2])) //tag
-                operation.splice(0, 3, result)
-                console.log(result)
-            } else if (counter > 1 && operation[1] == "x") {
-                multiply(parseInt(operation[0]), parseInt(operation[2])) //tag
-                console.log('the numbers are' + operation)
-                operation.splice(0, 3, result)
-                console.log(result)
-            } else if (counter > 1 && operation[1] == "/") {
-                divide(parseInt(operation[0]), parseInt(operation[2])) //tag
-                console.log('the numbers are' + operation)
-                operation.splice(0, 3, result)
-                console.log(result)
-            }
-            operation = []
-            display_num.textContent = result
-        }
+        display_screen.textContent += button.id
+        displayValue = parseInt(display_screen.textContent)
+        internalValue += button.id
+        console.log(displayValue)
+        console.log("the internal value is " + internalValue)
     })
+
 })
 
+operator_btns.forEach((button) => {
+
+    button.addEventListener('click', () => {
+        operator = button.id
+        operation_arr.push(parseInt(internalValue))
+        operation_arr.push(operator)
+        console.log("the numbers are currently " + operation_arr)
+        if (operation_arr.length > 2) {
+            operate(operation_arr[0], operation_arr[1], operation_arr[2])
+            operation_arr.splice(0, 3, result)
+            console.log("the numbers are now: " + operation_arr)
+        }
+        display_screen.textContent = operation_arr
+        internalValue = ""
+    })
+
+})
+
+equals_btn.addEventListener('click', () => {
+    operation_arr.push(parseInt(internalValue))
+    operation_arr.push(operator)
+    if (operation_arr.length > 2) {
+        operate(operation_arr[0], operation_arr[1], operation_arr[2])
+        operation_arr.splice(0, 4, result)
+        console.log("the numbers are now: " + operation_arr)
+        display_screen.textContent = operation_arr
+        internalValue = operation_arr[0]
+    } 
+
+    if (internalValue = "") {
+        display_screen.textContent = "ERROR"
+    }
+})
+
+
+//operating functions
 const add = function (a, b) {
-    result = a + b
-    return result
+    return a + b
 }
 
 const subtract = function (a, b) {
-    result = a - b
-    return result
+    return a - b
 }
 
 const multiply = function (a, b) {
-    result = a * b
-    return result
+    return a * b
 }
 
 const divide = function (a, b) {
-    result = a/b
-    return result
+    return a / b
 }
+
+//takes the operator and both variables, checks the value of the operator, then calls the appropriate function
+//and whatever returns becomes the "result" variable
+function operate (num1, op, num2) {
+    if (op == "+") {
+        return result = add(num1, num2)
+    } else if (op == "-") {
+        return result = subtract(num1, num2)
+    } else if (op == "x") {
+        return result = multiply(num1, num2)
+    } else if (op == "/") {
+        return result = divide(num1, num2)
+    }
+}
+
+
+console.log(operator)
